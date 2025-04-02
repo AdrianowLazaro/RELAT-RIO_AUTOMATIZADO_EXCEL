@@ -1,0 +1,12 @@
+'Remover todas as imagens
+
+Sub RemoverTodasImagens()
+    On Error Resume Next
+    Dim img As Shape
+
+    For Each img In ActiveSheet.Shapes
+        If img.Name Like "*Picture*" Then
+            img.Delete
+        End If
+    Next img
+End Sub
