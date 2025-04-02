@@ -1,0 +1,65 @@
+'Carregar_60_Imagens
+
+Sub Carregar_60_Imagens()
+    Dim Pict
+    Dim ImgFileFormat As String
+    Dim celulas As Variant
+    Dim i As Long, imgCount As Long, paginaAtual As Long
+    Dim leftPos As Single, topPos As Single, widthPos As Single, heightPos As Single
+    Dim celulaIndex As Long
+
+    ' Definir células de posicionamento
+    celulas = Array("A12", "F12", "A24", "F24", "A36", "F36") ' Células específicas (6 por página)
+    
+    ' Formatos de arquivo permitidos
+    ImgFileFormat = "Image Files JPEG (*.jpeg),*.jpeg,Image Files JPG (*.jpg),*.jpg, Image Files PNG (*.png),*.png, Image Files GIF (*.gif),*.gif, Image Files BMP (*.bmp),*.bmp"
+
+    ' Abrir caixa de diálogo para seleção de imagens
+    Pict = Application.GetOpenFilename(ImgFileFormat, MultiSelect:=True)
+
+    ' Verificar se o usuário selecionou imagens
+    If IsArray(Pict) Then
+        imgCount = UBound(Pict) ' Contar o número de imagens selecionadas
+
+        ' Verificar se a quantidade de imagens excede 60
+        If imgCount > 60 Then
+            MsgBox "Por favor, selecione no máximo 60 imagens.", vbExclamation
+            Exit Sub
+        End If
+
+        ' Inicializar variáveis
+        paginaAtual = 1
+        celulaIndex = 0
+
+        ' Loop para posicionar todas as imagens
+        For i = LBound(Pict) To UBound(Pict)
+            ' Calcular posição da imagem com base na célula correspondente
+            leftPos = Range(celulas(celulaIndex)).Left
+            topPos = Range(celulas(celulaIndex)).Top + (paginaAtual - 1) * Range("A1").Height * 46 ' Ajuste de página
+            widthPos = Range(celulas(celulaIndex)).Width * 4.99
+            heightPos = Range(celulas(celulaIndex)).Height * 7.98
+
+            ' Adicionar a imagem à planilha
+            Application.ActiveSheet.Shapes.AddPicture Pict(i), _
+                False, True, leftPos, topPos, widthPos, heightPos
+
+            ' Atualizar o índice da célula
+            celulaIndex = celulaIndex + 1
+
+            ' Verificar se todas as células da página foram preenchidas
+            If celulaIndex >= UBound(celulas) + 1 Then
+                celulaIndex = 0 ' Reiniciar para a primeira célula
+                paginaAtual = paginaAtual + 1 ' Avançar para a próxima página
+            End If
+        Next i
+
+        ' Mensagem de conclusão
+        MsgBox imgCount & " imagens carregadas com sucesso!", vbInformation
+    Else
+        MsgBox "Nenhuma imagem foi selecionada.", vbExclamation
+    End If
+End Sub
+
+
+
+
