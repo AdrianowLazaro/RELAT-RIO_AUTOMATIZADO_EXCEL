@@ -1,0 +1,402 @@
+Sub JMCTRLPIC_1()
+    Application.CommandBars("Cell").Reset
+
+    Dim cbc As CommandBarControl
+
+    ' Oculta todos os comandos do botão direito
+    For Each cbc In Application.CommandBars("cell").Controls
+        cbc.Visible = False
+    Next cbc
+
+    ' Adiciona um submenu com o nome PÁGINA_01 a PÁGINA_10
+    Dim j As Integer
+    For j = 1 To 10
+        Application.CommandBars("Cell").Controls.Add(Type:=msoControlPopup).Caption = "PÁGINA_" & Format(j, "00")
+        With Application.CommandBars("Cell").Controls("PÁGINA_" & Format(j, "00"))
+        
+            ' Adiciona um submenu com o nome ADICIONAR ATÉ 6 IMAGENS
+            With .CommandBar.Controls.Add(Type:=msoControlButton)
+                .FaceId = 2089
+                .Caption = "ADICIONAR ATÉ 6 IMAGENS"
+                .OnAction = "Carregar_pgX" & j
+            End With
+
+            ' Botões para editar imagens específicas
+            Dim i As Integer
+            For i = 1 To 6
+                With .CommandBar.Controls.Add(Type:=msoControlButton)
+                    .FaceId = 2089
+                    .Caption = "EDITAR IMAGEM 0" & i & ".Pg" & Format(j, "00")
+                    .OnAction = "Edit_ima" & i & "_pgX" & j
+                End With
+            Next i
+        End With
+    Next j
+
+    Application.CommandBars("Cell").ShowPopup
+    Application.CommandBars("Cell").Reset
+
+    For Each cbc In Application.CommandBars("cell").Controls
+        cbc.Visible = True
+    Next cbc
+End Sub
+
+Sub Carregar_pgX1()
+    Call Carregar_pg(1)
+End Sub
+
+Sub Carregar_pgX2()
+    Call Carregar_pg(2)
+End Sub
+Sub Carregar_pgX3()
+    Call Carregar_pg(3)
+End Sub
+Sub Carregar_pgX4()
+    Call Carregar_pg(4)
+End Sub
+Sub Carregar_pgX5()
+    Call Carregar_pg(5)
+End Sub
+Sub Carregar_pgX6()
+    Call Carregar_pg(6)
+End Sub
+Sub Carregar_pgX7()
+    Call Carregar_pg(7)
+End Sub
+Sub Carregar_pgX8()
+    Call Carregar_pg(8)
+End Sub
+Sub Carregar_pgX9()
+    Call Carregar_pg(9)
+End Sub
+Sub Carregar_pgX10()
+    Call Carregar_pg(10)
+End Sub
+
+
+'Editar imagens de forma coletiva 6 img
+
+Sub Carregar_pg(pg As Integer)
+    Dim Pict
+    Dim ImgFileFormat As String
+    Dim celulas As Variant
+    celulas = Array("A12", "F12", "A24", "F24", "A36", "F36") ' Células específicas
+
+    ImgFileFormat = "Image Files JPEG (*.jpeg),*.jpeg,Image Files JPG (*.jpg),*.jpg, Image Files PNG (*.png),*.png, Image Files GIF (*.gif),*.gif, Image Files BMP (*.bmp),*.bmp"
+
+    Pict = Application.GetOpenFilename(ImgFileFormat, MultiSelect:=True)
+
+    If IsArray(Pict) Then
+        If UBound(Pict) <= 6 Then ' Verifica até 6 imagens
+            Dim i As Integer
+            For i = LBound(Pict) To UBound(Pict)
+                Dim leftPos As Single
+                Dim topPos As Single
+                Dim widthPos As Single
+                Dim heightPos As Single
+                
+                leftPos = Range(celulas(i - 1)).Left
+                topPos = Range(celulas(i - 1)).Top + (pg - 1) * Range("A1").Height * 46 ' Ajustando o deslocamento para cada página
+                widthPos = Range(celulas(i - 1)).Width * 4.99
+                heightPos = Range(celulas(i - 1)).Height * 7.98
+                
+                Debug.Print "Adding Picture: " & Pict(i)
+                Debug.Print "Left: " & leftPos & " Top: " & topPos & " Width: " & widthPos & " Height: " & heightPos
+                
+                Application.ActiveSheet.Shapes.AddPicture Pict(i), _
+                    False, True, leftPos, topPos, widthPos, heightPos
+            Next i
+        Else
+            MsgBox "Selecionar apenas até 6 imagens"
+        End If
+    End If
+End Sub
+
+
+
+
+' Subrotinas de edição de imagens
+
+' Página 1
+Sub Edit_ima1_pgX1()
+    Call EditarImagem("A12", 1)
+End Sub
+
+Sub Edit_ima2_pgX1()
+    Call EditarImagem("F12", 1)
+End Sub
+
+Sub Edit_ima3_pgX1()
+    Call EditarImagem("I17", 1)
+End Sub
+
+Sub Edit_ima4_pgX1()
+    Call EditarImagem("A33", 1)
+End Sub
+
+Sub Edit_ima5_pgX1()
+    Call EditarImagem("E33", 1)
+End Sub
+
+Sub Edit_ima6_pgX1()
+    Call EditarImagem("I33", 1)
+End Sub
+
+' Página 2
+Sub Edit_ima1_pgX2()
+    Call EditarImagem("A17", 2)
+End Sub
+
+Sub Edit_ima2_pgX2()
+    Call EditarImagem("E17", 2)
+End Sub
+
+Sub Edit_ima3_pgX2()
+    Call EditarImagem("I17", 2)
+End Sub
+
+Sub Edit_ima4_pgX2()
+    Call EditarImagem("A33", 2)
+End Sub
+
+Sub Edit_ima5_pgX2()
+    Call EditarImagem("E33", 2)
+End Sub
+
+Sub Edit_ima6_pgX2()
+    Call EditarImagem("I33", 2)
+End Sub
+
+' Continuar até a Página 50
+Sub Edit_ima1_pgX3()
+    Call EditarImagem("A17", 3)
+End Sub
+
+Sub Edit_ima2_pgX3()
+    Call EditarImagem("E17", 3)
+End Sub
+
+Sub Edit_ima3_pgX3()
+    Call EditarImagem("I17", 3)
+End Sub
+
+Sub Edit_ima4_pgX3()
+    Call EditarImagem("A33", 3)
+End Sub
+
+Sub Edit_ima5_pgX3()
+    Call EditarImagem("E33", 3)
+End Sub
+
+Sub Edit_ima6_pgX3()
+    Call EditarImagem("I33", 3)
+End Sub
+
+' pagina 4
+Sub Edit_ima1_pgX4()
+    Call EditarImagem("A17", 4)
+End Sub
+
+Sub Edit_ima2_pgX4()
+    Call EditarImagem("E17", 4)
+End Sub
+
+Sub Edit_ima3_pgX4()
+    Call EditarImagem("I17", 4)
+End Sub
+
+Sub Edit_ima4_pgX4()
+    Call EditarImagem("A33", 4)
+End Sub
+
+Sub Edit_ima5_pgX4()
+    Call EditarImagem("E33", 4)
+End Sub
+
+Sub Edit_ima6_pgX4()
+    Call EditarImagem("I33", 4)
+End Sub
+' pagina 5
+Sub Edit_ima1_pgX5()
+    Call EditarImagem("A17", 5)
+End Sub
+
+Sub Edit_ima2_pgX5()
+    Call EditarImagem("E17", 5)
+End Sub
+
+Sub Edit_ima3_pgX5()
+    Call EditarImagem("I17", 5)
+End Sub
+
+Sub Edit_ima4_pgX5()
+    Call EditarImagem("A33", 5)
+End Sub
+
+Sub Edit_ima5_pgX5()
+    Call EditarImagem("E33", 5)
+End Sub
+
+Sub Edit_ima6_pgX5()
+    Call EditarImagem("I33", 5)
+End Sub
+' pagina 6
+Sub Edit_ima1_pgX6()
+    Call EditarImagem("A17", 6)
+End Sub
+
+Sub Edit_ima2_pgX6()
+    Call EditarImagem("E17", 6)
+End Sub
+
+Sub Edit_ima3_pgX6()
+    Call EditarImagem("I17", 6)
+End Sub
+
+Sub Edit_ima4_pgX6()
+    Call EditarImagem("A33", 6)
+End Sub
+
+Sub Edit_ima5_pgX6()
+    Call EditarImagem("E33", 6)
+End Sub
+
+Sub Edit_ima6_pgX6()
+
+End Sub
+    Call EditarImagem("I33", 6)
+' pagina 7
+Sub Edit_ima1_pgX7()
+    Call EditarImagem("A17", 7)
+End Sub
+
+Sub Edit_ima2_pgX7()
+    Call EditarImagem("E17", 7)
+End Sub
+
+Sub Edit_ima3_pgX7()
+    Call EditarImagem("I17", 7)
+End Sub
+
+Sub Edit_ima4_pgX7()
+    Call EditarImagem("A33", 7)
+End Sub
+
+Sub Edit_ima5_pgX7()
+    Call EditarImagem("E33", 7)
+End Sub
+
+Sub Edit_ima6_pgX7()
+
+End Sub
+    Call EditarImagem("I33", 7)
+    ' pagina 8
+Sub Edit_ima1_pgX8()
+    Call EditarImagem("A17", 8)
+End Sub
+
+Sub Edit_ima2_pgX8()
+    Call EditarImagem("E17", 8)
+End Sub
+
+Sub Edit_ima3_pgX8()
+    Call EditarImagem("I17", 8)
+End Sub
+
+Sub Edit_ima4_pgX8()
+    Call EditarImagem("A33", 8)
+End Sub
+
+Sub Edit_ima5_pgX8()
+    Call EditarImagem("E33", 8)
+End Sub
+
+Sub Edit_ima6_pgX8()
+
+End Sub
+    Call EditarImagem("I33", 8)
+     ' pagina 9
+Sub Edit_ima1_pgX9()
+    Call EditarImagem("A17", 9)
+End Sub
+
+Sub Edit_ima2_pgX9()
+    Call EditarImagem("E17", 9)
+End Sub
+
+Sub Edit_ima3_pgX9()
+    Call EditarImagem("I17", 9)
+End Sub
+
+Sub Edit_ima4_pgX9()
+    Call EditarImagem("A33", 9)
+End Sub
+
+Sub Edit_ima5_pgX9()
+    Call EditarImagem("E33", 9)
+End Sub
+
+Sub Edit_ima6_pgX9()
+
+End Sub
+    Call EditarImagem("I33", 9)
+     ' pagina 10
+Sub Edit_ima1_pgX10()
+    Call EditarImagem("A17", 10)
+End Sub
+
+Sub Edit_ima2_pgX10()
+    Call EditarImagem("E17", 10)
+End Sub
+
+Sub Edit_ima3_pgX10()
+    Call EditarImagem("I17", 10)
+End Sub
+
+Sub Edit_ima4_pgX10()
+    Call EditarImagem("A33", 10)
+End Sub
+
+Sub Edit_ima5_pgX10()
+    Call EditarImagem("E33", 10)
+End Sub
+
+Sub Edit_ima6_pgX10()
+
+End Sub
+    Call EditarImagem("I33", 10)
+
+
+'Editar imagens selecionadas forma individual
+
+Sub EditarImagem(celula As String, pg As Integer)
+   
+    
+    Dim Pict
+    Dim ImgFileFormat As String
+    ImgFileFormat = "Image Files JPEG (*.jpeg),*.jpeg,Image Files JPG (*.jpg),*.jpg, Image Files PNG (*.png),*.png, Image Files GIF (*.gif),*.gif, Image Files BMP (*.bmp),*.bmp"
+    
+    Pict = Application.GetOpenFilename(ImgFileFormat, MultiSelect:=False)
+    
+    If VarType(Pict) = vbString Then
+        Dim leftPos As Single
+        Dim topPos As Single
+        Dim widthPos As Single
+        Dim heightPos As Single
+        
+        leftPos = Range(celula).Left
+        topPos = Range(celula).Top + (pg - 1) * Range("A1").Height * 50 ' Ajustando o deslocamento para cada página
+        widthPos = Range(celula).Width * 4.99
+        heightPos = Range(celula).Height * 7.98
+        
+        Debug.Print "Editing Picture: " & Pict
+        Debug.Print "Left: " & leftPos & " Top: " & topPos & " Width: " & widthPos & " Height: " & heightPos
+
+        Application.ActiveSheet.Shapes.AddPicture Pict, _
+            False, True, leftPos, topPos, widthPos, heightPos
+    Else
+        MsgBox "Nenhuma imagem selecionada"
+    End If
+End Sub
+
+
